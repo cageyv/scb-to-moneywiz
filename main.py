@@ -81,5 +81,5 @@ moneywiz_urls = [
 
 for url in moneywiz_urls:
     logger.debug(url)
-    # webbrowser.open(url)
+    webbrowser.open(url)
 
