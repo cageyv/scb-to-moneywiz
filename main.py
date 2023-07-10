@@ -73,11 +73,9 @@ preprocessed_data_for_csv = [
     {
         "Account": args.account,
         "Amount": row["Amount"],
-        "Currency": args.currency,
         "Date": row["Date"],
-        "Time": row["Time"],
         "Payee": row["Description"],
-        "Memo": row["Notes"] + " Code:" + row["Code/Channel"]
+        "Memo": row["Notes"] + " Code: " + row["Code/Channel"] + " Time: " + row["Time"],
     }
     for _, row in scb_parsed_transaction_data.iterrows()
 ]
@@ -100,7 +98,7 @@ moneywiz_urls = [
 if args.csv:
     logger.debug("Generate CSV file")
     with open(args.outfile, 'w', newline='') as csvfile:
-        fieldnames = ["Account", "Amount", "Currency", "Date", "Time", "Payee", "Memo"]
+        fieldnames = ["Account", "Amount", "Date", "Payee", "Memo"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         # Write the header
