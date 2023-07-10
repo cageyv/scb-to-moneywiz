@@ -12,6 +12,8 @@ import scb_parser
 import webbrowser
 import moneywiz_url_parser
 
+import csv
+
 # Logger Setup
 logging.basicConfig(format='%(levelname)s %(filename)s:%(lineno)s : %(message)s', level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -27,6 +29,7 @@ parser.add_argument('--password', type=str, default="XXXXXXX", help="PDF File Pa
 parser.add_argument('--account', type=str, default="TEST", help="MoneyWiz Account Name")
 parser.add_argument('--currency', type=str, default="THB", help="MoneyWiz Currency")
 parser.add_argument('--save' , action="store_true", help="Save MoneyWiz Transaction")
+parser.add_argument('--csv', action="store_true", help="Generate CSV, skip MoneyWiz URLs")
 parser.add_argument('--debug', action="store_true", help="Print debug info")
 args = parser.parse_args()
 
@@ -65,6 +68,20 @@ preprocessed_data_for_moneywiz = [
     for _, row in scb_parsed_transaction_data.iterrows()
 ]
 
+# Preprocess csv_data using a list comprehension
+preprocessed_data_for_csv = [
+    {
+        "Account": args.account,
+        "Amount": row["Amount"],
+        "Currency": args.currency,
+        "Date": row["Date"],
+        "Time": row["Time"],
+        "Payee": row["Description"],
+        "Memo": row["Notes"] + " Code:" + row["Code/Channel"]
+    }
+    for _, row in scb_parsed_transaction_data.iterrows()
+]
+
 # Process the preprocessed_data using get_moneywiz_url
 moneywiz_urls = [
     moneywiz_url_parser.get_moneywiz_url(
@@ -79,7 +96,23 @@ moneywiz_urls = [
     for data in preprocessed_data_for_moneywiz
 ]
 
-for url in moneywiz_urls:
-    logger.debug(url)
-    webbrowser.open(url)
+# Write transacations directly to MoneyWiz or create CSV file
+if args.csv:
+    logger.debug("Generate CSV file")
+    with open(args.outfile, 'w', newline='') as csvfile:
+        fieldnames = ["Account", "Amount", "Currency", "Date", "Time", "Payee", "Memo"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Write the header
+        writer.writeheader()
+
+        # Write the rows
+        for data in preprocessed_data_for_csv:
+            writer.writerow(data)
+
+else:
+    logger.debug("Open MoneyWiz URLs")
+    for url in moneywiz_urls:
+        logger.debug(url)
+        webbrowser.open(url)
 

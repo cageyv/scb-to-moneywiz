@@ -14,8 +14,12 @@ Conversion from SCB Easy App Statement to MoneyWiz app
 - Open SCB Easy mobile app
 - Go to Bank Services -> Account Summary -> Select account and click "Tap to view more details" -> "More Services" -> Request Statement -> Select range -> Check Mail Box 
 
-## How to run
+## How to use 
+### MoneyWiz URL Scheme
 `python3 main.py --password XXXXXX --account TEST --infile ./data/AcctSt_Jul23.pdf --save --debug'`
+
+### CSV file
+`python3 main.py --password XXXXXX --account TEST --infile ./data/AcctSt_Jul23.pdf --csv --debug'`
 
 ## MoneyWiz info
 https://help.wiz.money/en/articles/4525440-automate-transaction-management-with-url-schemas 
