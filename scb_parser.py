@@ -88,30 +88,30 @@ def verify_amounts(parsed_data, total):
 
     # Filter debit amounts (negative values)
     debit_transactions = parsed_data.loc[parsed_data[amount_column] < 0, amount_column]
-    debit_total = debit_transactions.sum()
+    debit_total = round(debit_transactions.sum(), 2) # Rounding to 2 decimal places
     debit_total_items = len(debit_transactions)
 
     # Filter credit amounts (positive values)
     credit_transactions = parsed_data.loc[parsed_data[amount_column] > 0, amount_column]
-    credit_total = credit_transactions.sum()
+    credit_total = round(credit_transactions.sum(), 2) # Rounding to 2 decimal places
     credit_total_items = len(credit_transactions)
 
     # Exit with False in case of negative checks 
     
     if debit_total != total["debit"]:
-        logging.error("Debit total amount is not equal to the source total amount")
+        logging.error(f'Debit total amount {debit_total} is not equal to the source total amount {total["debit"]}')
         return False
 
     if credit_total != total["credit"]:
-        logging.error("Credit total amount is not equal to the source total amount")
+        logging.error(f'Credit total amount {credit_total} is not equal to the source total amount {credit_total != total["credit"]}')
         return False
     
     if debit_total_items != total["items_debit"]:
-        logging.error("Debit total items is not equal to the source total items")
+        logging.error(f'Debit total items {debit_total_items} is not equal to the source total items {total["items_debit"]}')
         return False
     
     if credit_total_items != total["items_credit"]:
-        logging.error("Credit total items is not equal to the source total items")
+        logging.error(f'Credit total items {credit_total_items} is not equal to the source total items {total["items_credit"]}')
         return False
     
     return True
