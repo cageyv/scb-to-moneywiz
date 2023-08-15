@@ -10,22 +10,30 @@ def parse_transations(source):
 
     for index, df in enumerate(source):
         # Find the row index containing "Date/Time"
-        colum_names_row = df[df.apply(lambda row: row.astype(str).str.contains("Date/Time", case=False).any(), axis=1)].index[0]
-        # On the first page we should skip "Balance brought forward" row, which comes under "Date/Time" row
-        if index == 0:
-            start_row = colum_names_row + 3
-        else:
-            start_row = colum_names_row + 2
+        start_rows = df[df.apply(lambda row: row.astype(str).str.contains("Date/Time", case=False).any(), axis=1)]
+        
         # Find the row index containing "www.scb.co.th" or "Total Amount"
-        end_row = df[df.apply(lambda row: row.astype(str).str.contains("www.scb.co.th|Total Amount", case=False).any(), axis=1)].index[0]
+        end_rows = df[df.apply(lambda row: row.astype(str).str.contains("www.scb.co.th|Total Amount", case=False).any(), axis=1)]
 
-        # Extract the transaction data between the start and end rows
-        # And only get first 2 column with data
-        transaction_df = df.iloc[start_row:end_row, :2]
+        if not start_rows.empty and not end_rows.empty:
+            # On the first page we should skip "Balance brought forward" row, which comes under "Date/Time" row
+            if index == 0:
+                start_row = start_rows.index[0] + 3
+            else:
+                start_row = start_rows.index[0] + 2
+            
+            # Set the end row
+            end_row = end_rows.index[0]
 
-        # Append the extracted data to the final dataframe
-        transaction_data = pd.concat([transaction_data, transaction_df], ignore_index=True)
+            # Extract the transaction data between the start and end rows
+            # And only get first 2 column with data
+            transaction_df = df.iloc[start_row:end_row, :2]
 
+            # Append the extracted data to the final dataframe
+            transaction_data = pd.concat([transaction_data, transaction_df], ignore_index=True)
+
+        else:
+            continue  # Skip to the next iteration/page if "Date/Time" is not found
 
     # transaction_data contains 3 row per 1 transaction. 
     # Row 1: [0] Date , [1] DESC : <DESCRIPTION>
