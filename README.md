@@ -16,10 +16,10 @@ Conversion from SCB Easy App Statement to MoneyWiz app
 
 ## How to use 
 ### MoneyWiz URL Scheme
-`python3 main.py --password XXXXXX --account TEST --infile ./data/AcctSt_Jul23.pdf --save --debug'`
+`python3 main.py --password XXXXXX --account TEST --infile ./data/AcctSt_Jul23.pdf --save --debug`
 
 ### CSV file
-`python3 main.py --password XXXXXX --account TEST --infile ./data/AcctSt_Jul23.pdf --csv --debug'`
+`python3 main.py --password XXXXXX --account TEST --infile ./data/AcctSt_Jul23.pdf --csv --debug`
 
 ## MoneyWiz info
 https://help.wiz.money/en/articles/4525440-automate-transaction-management-with-url-schemas 
