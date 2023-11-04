@@ -53,10 +53,11 @@ def parse_transations(source):
         amount=float(amount.replace(",", ""))
 
         # Apply logic for determining the sign of the amount
-        if code_channel.startswith('X1'):
-            amount *= 1  # positive for X1. X1 - means income
+        income_codes = ["X1", "XB"]
+        if any(code_channel.startswith(code) for code in income_codes):
+            amount = abs(amount)  # positive for X1. X1 - means income
         else:
-            amount *= -1  # negative for others. Others - means expense
+            amount = -abs(amount) # negative for others. Others - means expense
 
         # Description formating. Remove DESC :
         description = description.replace("DESC : ", "")
@@ -108,10 +109,14 @@ def verify_amounts(parsed_data, total):
     
     if debit_total != total["debit"]:
         logging.error(f'Debit total amount {debit_total} is not equal to the source total amount {total["debit"]}')
+        for i in debit_transactions:
+            logging.debug(f'Debit transactions: {i}')
         return False
 
     if credit_total != total["credit"]:
         logging.error(f'Credit total amount {credit_total} is not equal to the source total amount {credit_total != total["credit"]}')
+        for i in credit_transactions:
+            logging.debug(f'Credit transactions: {i}')
         return False
     
     if debit_total_items != total["items_debit"]:
