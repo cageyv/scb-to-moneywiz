@@ -53,7 +53,7 @@ def parse_transations(source):
         amount=float(amount.replace(",", ""))
 
         # Apply logic for determining the sign of the amount
-        income_codes = ["X1", "XB"]
+        income_codes = ["X1", "XB", "IN"] # X1 - Transfer, XB - Refund, IN - Interest
         if any(code_channel.startswith(code) for code in income_codes):
             amount = abs(amount)  # positive for X1. X1 - means income
         else:
