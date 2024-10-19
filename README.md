@@ -38,6 +38,9 @@ source env/bin/activate
 ### CSV file
 `python3 main.py --password XXXXXX --account TEST --infile ./data/AcctSt_Jul23.pdf --csv --debug`
 
+### Proccess many PDF statment into CSV files
+`./process.sh $PASSWORD $ACCOUNT_NAME` - it will pickup all .pdf files from `./data` folder and convert them into CSV files.
+
 ## MoneyWiz info
 https://help.wiz.money/en/articles/4525440-automate-transaction-management-with-url-schemas 
 
